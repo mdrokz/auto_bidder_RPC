@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+option go_package = "auto_bidder_rpc/protos";
+// option java_multiple_files = true;
+// option java_package = "io.grpc.examples.helloworld";
+// option java_outer_classname = "HelloWorldProto";
+
+package auto_bidder_RPC;
+
+service Bid {
+    rpc getBids (BidInput) returns (BidOutput) {};
+}
+
+service Project {
+    rpc getProjects (ProjectEmpty) returns (stream Projects) {};
+    rpc bidOnProject (ProjectInfo) returns (ProjectStatus) {};
+    rpc subscribeToProject (ProjectEmpty) returns (stream Projects) {};
+}
+
+service Auth {
+    rpc checkStatus (AuthEmpty) returns (AuthStatus) {};
+    rpc authenticate (AuthCredentials) returns (AuthStatus) {};
+}
+
+// BidInput indicates if getBids should get new bids
+message BidInput {
+    bool refresh = 1;
+}
+
+// BidOutput returns number of bids
+message BidOutput {
+    int32 bids = 1;
+}
+
+// Represent an Empty Type for Project
+message ProjectEmpty {}
+
+message ProjectStatus {
+    bool status = 1;
+}
+
+// Represent an Empty Type for Project
+message AuthEmpty {}
+
+message AuthStatus {
+    bool isCookie = 1;
+}
+
+message AuthCredentials {
+    string username = 1;
+    string password = 2;
+    string usernameInput = 3;
+    string passwordInput = 4;
+    string buttonInput = 5;
+}
+
+message ProjectInfo {
+    string link = 1;
+    string bidAmount = 2;
+    string projectDelivery = 3;
+    string projectDescription = 4;
+    string bidAmountPath = 5;        
+	string projectDeliveryPath = 6;    
+	string projectDescriptionPath = 7;
+	string bidButtonPath = 8;
+}
+
+message Projects {
+    string skills = 1;    
+	string title  = 2;   
+	string link = 3;     
+	string description = 4;
+	string biddingPrice = 5;
+	bool selected = 6;    
+	string currency = 7;
+}
