@@ -11,7 +11,6 @@ import (
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
-// Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
 // BidClient is the client API for Bid service.
@@ -104,7 +103,7 @@ var Bid_ServiceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProjectClient interface {
-	GetProjects(ctx context.Context, in *ProjectEmpty, opts ...grpc.CallOption) (Project_GetProjectsClient, error)
+	GetProjects(ctx context.Context, in *ProjectPathInfo, opts ...grpc.CallOption) (Project_GetProjectsClient, error)
 	BidOnProject(ctx context.Context, in *ProjectInfo, opts ...grpc.CallOption) (*ProjectStatus, error)
 	SubscribeToProject(ctx context.Context, in *ProjectEmpty, opts ...grpc.CallOption) (Project_SubscribeToProjectClient, error)
 }
@@ -117,7 +116,7 @@ func NewProjectClient(cc grpc.ClientConnInterface) ProjectClient {
 	return &projectClient{cc}
 }
 
-func (c *projectClient) GetProjects(ctx context.Context, in *ProjectEmpty, opts ...grpc.CallOption) (Project_GetProjectsClient, error) {
+func (c *projectClient) GetProjects(ctx context.Context, in *ProjectPathInfo, opts ...grpc.CallOption) (Project_GetProjectsClient, error) {
 	stream, err := c.cc.NewStream(ctx, &Project_ServiceDesc.Streams[0], "/auto_bidder_RPC.Project/getProjects", opts...)
 	if err != nil {
 		return nil, err
@@ -194,7 +193,7 @@ func (x *projectSubscribeToProjectClient) Recv() (*Projects, error) {
 // All implementations must embed UnimplementedProjectServer
 // for forward compatibility
 type ProjectServer interface {
-	GetProjects(*ProjectEmpty, Project_GetProjectsServer) error
+	GetProjects(*ProjectPathInfo, Project_GetProjectsServer) error
 	BidOnProject(context.Context, *ProjectInfo) (*ProjectStatus, error)
 	SubscribeToProject(*ProjectEmpty, Project_SubscribeToProjectServer) error
 	mustEmbedUnimplementedProjectServer()
@@ -204,7 +203,7 @@ type ProjectServer interface {
 type UnimplementedProjectServer struct {
 }
 
-func (UnimplementedProjectServer) GetProjects(*ProjectEmpty, Project_GetProjectsServer) error {
+func (UnimplementedProjectServer) GetProjects(*ProjectPathInfo, Project_GetProjectsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetProjects not implemented")
 }
 func (UnimplementedProjectServer) BidOnProject(context.Context, *ProjectInfo) (*ProjectStatus, error) {
@@ -227,7 +226,7 @@ func RegisterProjectServer(s grpc.ServiceRegistrar, srv ProjectServer) {
 }
 
 func _Project_GetProjects_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(ProjectEmpty)
+	m := new(ProjectPathInfo)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}

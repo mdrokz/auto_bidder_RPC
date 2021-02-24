@@ -1,8 +1,4 @@
 () => {
-    const targetNode = document.getElementById('search-results');
-
-    const listNode = document.getElementsByClassName('search-result-list')[0];
-
     const config = { attributes: true, childList: true };
     const callback = function (mutationList, observer) {
         // console.log(mutationList);
@@ -40,11 +36,22 @@
         }
     }
 
+    const listNode = document.getElementsByClassName('search-result-list')[0];
+    const targetNode = document.getElementById('search-results');
+
     const listObserver = new MutationObserver(listCallBack);
-
-    listObserver.observe(listNode, config);
-
     const observer = new MutationObserver(callback);
 
-    observer.observe(targetNode, config);
+    if(!listNode) {
+        // window.requestAnimationFrame(() => {
+        //     listNode = document.getElementsByClassName('search-result-list')[0];
+        // })
+     setTimeout(() => {
+        listNode = document.getElementsByClassName('search-result-list')[0];
+        targetNode = document.getElementById('search-results');
+    });   
+    } else {
+        listObserver.observe(listNode, config);
+        observer.observe(targetNode, config);
+    }
 }

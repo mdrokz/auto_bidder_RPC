@@ -20,6 +20,7 @@ import (
 // Scraper ...
 type Scraper struct {
 	Browser *rod.Browser
+	BidPath BidPath
 	Page    *rod.Page
 }
 
@@ -27,10 +28,10 @@ type Scraper struct {
 var evalProjectFile string
 
 //go:embed eval.js
-var evalFIle string
+var evalFile string
 
-func (s *Scraper) Start(url string) {
-	l := launcher.New().Headless(false)
+func (s *Scraper) Start(url string, headless bool) {
+	l := launcher.New().Headless(headless)
 
 	u := l.MustLaunch()
 
@@ -104,7 +105,7 @@ func (s *Scraper) Login(cred LoginInfo) error {
 
 func (s *Scraper) GetProjects(pfunc func([]*pb.Projects)) func() error {
 
-	s.Page.MustWaitNavigation()()
+	// s.Page.MustWaitNavigation()()
 
 	s.Page.WaitLoad()
 
@@ -150,6 +151,10 @@ func (s *Scraper) GetProjects(pfunc func([]*pb.Projects)) func() error {
 
 func (s *Scraper) SubscribeToProject(pfunc func(*pb.Projects)) {
 
+	s.Page.MustWaitNavigation()()
+
+	s.Page.MustWaitLoad()
+
 	s.Page.Expose("GetProject", func(v gson.JSON) (interface{}, error) {
 		var project pb.Projects
 
@@ -166,16 +171,15 @@ func (s *Scraper) SubscribeToProject(pfunc func(*pb.Projects)) {
 		return nil, nil
 	})
 
-	file, _ := os.Open("./eval.js")
-	bytes, _ := ioutil.ReadAll(file)
+	// file, _ := os.Open("./eval.js")
+	// bytes, _ := ioutil.ReadAll(file)
 
 	_, err := s.Page.Evaluate(&rod.EvalOptions{
-		JS: string(bytes),
+		JS: evalFile,
 	})
 
-	fmt.Println("here")
-
 	CheckError(err)
+
 }
 
 func (s *Scraper) BidOnProject(url string, bidInfo BidInfo) bool {

@@ -12,7 +12,7 @@ service Bid {
 }
 
 service Project {
-    rpc getProjects (ProjectEmpty) returns (stream Projects) {};
+    rpc getProjects (ProjectPathInfo) returns (stream Projects) {};
     rpc bidOnProject (ProjectInfo) returns (ProjectStatus) {};
     rpc subscribeToProject (ProjectEmpty) returns (stream Projects) {};
 }
@@ -63,6 +63,13 @@ message ProjectInfo {
 	string projectDeliveryPath = 6;    
 	string projectDescriptionPath = 7;
 	string bidButtonPath = 8;
+}
+
+message ProjectPathInfo {
+    string bidAmountPath = 1;        
+	string projectDeliveryPath = 2;    
+	string projectDescriptionPath = 3;
+	string bidButtonPath = 4;
 }
 
 message Projects {

@@ -44,7 +44,7 @@ func (s *authService) Authenticate(ctx context.Context, in *pb.AuthCredentials) 
 		return &pb.AuthStatus{IsCookie: true}, nil
 	} else {
 		s := scraper.Scraper{}
-		s.Start("https://www.freelancer.com/login")
+		s.Start("https://www.freelancer.com/login", true)
 		err := s.Login(scraper.LoginInfo{
 			in.Username,
 			in.Password,
